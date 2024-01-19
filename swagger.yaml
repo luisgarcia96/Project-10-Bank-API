@@ -112,42 +112,6 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  /user/transaction/{transactionId}:
-    patch:
-      security:
-        - Bearer: []
-      tags:
-        - Transactions Module
-      summary: Edit Transactions API
-      description: API for updating transaction details, such as adding a category or notes to a transaction. Requires a valid Bearer JWT token for authentication.
-      parameters:
-        - in: path
-          name: transactionId
-          description: ID of the transaction to update
-          type: string
-          required: true
-        - in: header
-          name: Authorization
-          description: Attach Bearer JWT token
-          type: string
-          required: true
-        - in: body
-          name: body
-          description: Update transaction's category or notes
-          required: true
-          schema:
-            $ref: '#/definitions/TransactionUpdate'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Transaction updated successfully
-          schema:
-            $ref: '#/definitions/Transaction'
-        '400':
-          description: Invalid Fields
-        '500':
-          description: Internal Server Error
   /user/comptes/{compteId}/transactions:
     get:
       security:
@@ -185,6 +149,79 @@ paths:
       responses:
         '200':
           description: Transactions retrieved successfully
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Transaction'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /user/comptes/{compteId}/transactions/{transactionId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Get Transaction Details API
+      description: API for getting the details of a specific transaction associated with a particular account. Requires a valid Bearer JWT token for authentication.
+      parameters:
+        - in: path
+          name: compteId
+          description: ID of the account
+          type: string
+          required: true
+        - in: path
+          name: transactionId
+          description: ID of the transaction to retrieve
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction details retrieved successfully
+          schema:
+            $ref: '#/definitions/Transaction'
+        '404':
+          description: Transaction not found
+        '500':
+          description: Internal Server Error
+  /user/transaction/{transactionId}:
+    patch:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Edit Transactions API
+      description: API for updating transaction details, such as adding a category or notes to a transaction. Requires a valid Bearer JWT token for authentication.
+      parameters:
+        - in: path
+          name: transactionId
+          description: ID of the transaction to update
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: Update transaction's category or notes
+          required: true
+          schema:
+            $ref: '#/definitions/TransactionUpdate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction updated successfully
           schema:
             $ref: '#/definitions/Transaction'
         '400':
