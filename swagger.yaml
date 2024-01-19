@@ -192,6 +192,31 @@ paths:
           description: Transaction not found
         '500':
           description: Internal Server Error
+  /categories:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Get Categories API
+      description: API for retrieving the list of transaction categories. Requires a valid Bearer JWT token for authentication.
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Categories retrieved successfully
+          schema:
+            type: array
+            items:
+              type: string
+        '500':
+          description: Internal Server Error
   /user/transaction/{transactionId}:
     patch:
       security:
