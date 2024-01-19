@@ -112,25 +112,36 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  /user/transaction:
+  /user/transaction/{transactionId}:
     patch:
       security:
         - Bearer: []
       tags:
         - Transactions Module
       summary: Edit Transactions API
-      description: API for adding a category or a note to a transaction
+      description: API for updating transaction details, such as adding a category or notes to a transaction. Requires a valid Bearer JWT token for authentication.
       parameters:
+        - in: path
+          name: transactionId  # Define the path parameter here
+          description: ID of the transaction to update
+          type: string
+          required: true
         - in: header
           name: Authorization
           description: Attach Bearer JWT token
           type: string
           required: true
+        - in: body
+          name: body
+          description: Update transaction's category or notes
+          required: true
+          schema:
+            $ref: '#/definitions/TransactionUpdate'
       produces:
         - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: Transaction updated successfully
           schema:
             $ref: '#/definitions/Transaction'
         '400':
@@ -202,6 +213,13 @@ definitions:
         type: number
       transactionType:
         type: string
+      category:
+        type: string
+      notes:
+        type: string
+  TransactionUpdate:
+    type: object
+    properties:
       category:
         type: string
       notes:
