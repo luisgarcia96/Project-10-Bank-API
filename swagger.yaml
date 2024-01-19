@@ -248,7 +248,7 @@ paths:
         '200':
           description: Transaction updated successfully
           schema:
-            $ref: '#/definitions/Transaction'
+            $ref: '#/definitions/TransactionUpdateResponse'
         '400':
           description: Invalid Fields
         '500':
@@ -328,4 +328,11 @@ definitions:
       category:
         type: string
       notes:
+        type: string
+  TransactionUpdateResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
         type: string
