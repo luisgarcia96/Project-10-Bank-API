@@ -113,50 +113,62 @@ paths:
         '500':
           description: Internal Server Error
   /user/comptes/{compteId}/transactions:
-    get:
-      security:
-        - Bearer: []
-      tags:
-        - Transactions Module
-      summary: Get Transactions API
-      description: API for getting the transactions associated with a specific account. Requires a valid Bearer JWT token for authentication.
-      parameters:
-        - in: path
-          name: compteId  
-          description: ID of the account
-          type: string
-          required: true
-        - in: query
-          name: page
-          description: Page number for pagination
-          type: integer
-          minimum: 1
-          default: 1
-        - in: query
-          name: pageSize
-          description: Number of transactions per page
-          type: integer
-          minimum: 1
-          maximum: 100
-          default: 20
-        - in: header
-          name: Authorization
-          description: Attach Bearer JWT token
-          type: string
-          required: true
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Transactions retrieved successfully
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Transaction'
-        '400':
-          description: Invalid Fields
-        '500':
-          description: Internal Server Error
+      get:
+        security:
+          - Bearer: []
+        tags:
+          - Transactions Module
+        summary: Get Transactions API
+        description: API for getting the transactions associated with a specific account for the current month. Requires a valid Bearer JWT token for authentication.
+        parameters:
+          - in: path
+            name: compteId  
+            description: ID of the account
+            type: string
+            required: true
+          - in: query
+            name: page
+            description: Page number for pagination
+            type: integer
+            minimum: 1
+            default: 1
+          - in: query
+            name: pageSize
+            description: Number of transactions per page
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          - in: query
+            name: month
+            description: Month of the transactions (1 for January, 2 for February, etc.)
+            type: integer
+            minimum: 1
+            maximum: 12
+            required: true
+          - in: query
+            name: year
+            description: Year of the transactions
+            type: integer
+            minimum: 1970
+          - in: header
+            name: Authorization
+            description: Attach Bearer JWT token
+            type: string
+            required: true
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: Transactions retrieved successfully
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/Transaction'
+          '400':
+            description: Invalid Fields
+          '500':
+            description: Internal Server Error
   /user/comptes/{compteId}/transactions/{transactionId}:
     get:
       security:
