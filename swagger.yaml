@@ -69,6 +69,7 @@ paths:
         - in: header
           name: Authorization
           description: Attach Bearer JWT token
+          type: string
           required: true
       produces:
         - application/json
@@ -92,6 +93,7 @@ paths:
         - in: header
           name: Authorization
           description: Attach Bearer JWT token
+          type: string
           required: true
         - in: body
           name: body
@@ -106,6 +108,159 @@ paths:
           description: User profile retrieved successully
           schema:
             $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /user/comptes/{compteId}/transactions:
+      get:
+        security:
+          - Bearer: []
+        tags:
+          - Transactions Module
+        summary: Get Transactions API
+        description: API for getting the transactions associated with a specific account for the current month. Requires a valid Bearer JWT token for authentication.
+        parameters:
+          - in: path
+            name: compteId  
+            description: ID of the account
+            type: string
+            required: true
+          - in: query
+            name: page
+            description: Page number for pagination
+            type: integer
+            minimum: 1
+            default: 1
+          - in: query
+            name: pageSize
+            description: Number of transactions per page
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          - in: query
+            name: month
+            description: Month of the transactions (1 for January, 2 for February, etc.)
+            type: integer
+            minimum: 1
+            maximum: 12
+            required: true
+          - in: query
+            name: year
+            description: Year of the transactions
+            type: integer
+            minimum: 1970
+          - in: header
+            name: Authorization
+            description: Attach Bearer JWT token
+            type: string
+            required: true
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: Transactions retrieved successfully
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/Transaction'
+          '400':
+            description: Invalid Fields
+          '500':
+            description: Internal Server Error
+  /user/comptes/{compteId}/transactions/{transactionId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Get Transaction Details API
+      description: API for getting the details of a specific transaction associated with a particular account. Requires a valid Bearer JWT token for authentication.
+      parameters:
+        - in: path
+          name: compteId
+          description: ID of the account
+          type: string
+          required: true
+        - in: path
+          name: transactionId
+          description: ID of the transaction to retrieve
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction details retrieved successfully
+          schema:
+            $ref: '#/definitions/Transaction'
+        '404':
+          description: Transaction not found
+        '500':
+          description: Internal Server Error
+  /categories:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Get Categories API
+      description: API for retrieving the list of transaction categories. Requires a valid Bearer JWT token for authentication.
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Categories retrieved successfully
+          schema:
+            type: array
+            items:
+              type: string
+        '500':
+          description: Internal Server Error
+  /user/transaction/{transactionId}:
+    patch:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Edit Transactions API
+      description: API for updating transaction details, such as adding a category or notes to a transaction. Requires a valid Bearer JWT token for authentication.
+      parameters:
+        - in: path
+          name: transactionId
+          description: ID of the transaction to update
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: Update transaction's category or notes
+          required: true
+          schema:
+            $ref: '#/definitions/TransactionUpdate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction updated successfully
+          schema:
+            $ref: '#/definitions/TransactionUpdateResponse'
         '400':
           description: Invalid Fields
         '500':
@@ -163,4 +318,33 @@ definitions:
       firstName:
         type: string
       lastName:
+        type: string
+  Transaction:
+    type: object
+    properties:
+      date:
+        type: string
+      descrption:
+        type: string
+      amount:
+        type: number
+      transactionType:
+        type: string
+      category:
+        type: string
+      notes:
+        type: string
+  TransactionUpdate:
+    type: object
+    properties:
+      category:
+        type: string
+      notes:
+        type: string
+  TransactionUpdateResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
         type: string
